@@ -1,11 +1,8 @@
 import { tareas } from '../models/tarea-model.js';
-import { Router } from "express";
+import { validateTareaSchema } from '../schemas/tareas.schema.js';
 
-
-
-export class TareasController
-{
-    static getAllTareas() {
+export class TareasController {
+    static getAllTareas(req, res) {
         res
         .header('Content-Type', 'application/json')
         .status(200)
@@ -16,7 +13,7 @@ export class TareasController
         const { id } = req.params;
         const tarea = tareas.find(tarea => tarea.id === parseInt(id));
         if (!tarea) {
-            res
+            return res
             .header('Content-Type', 'application/json')
             .status(404)
             .send({ message: `La tarea con id ${id} no existe` });
@@ -28,7 +25,16 @@ export class TareasController
     }
 
     static createTarea(req, res) {
-        const tarea = req.body;
+        const { success, error, data } = validateTareaSchema(req.body);
+        if (!success) {
+            return res
+            .header('Content-Type', 'application/json')
+            .status(400)
+            .send({ message: error.errors });
+        }
+        const tarea = data;
+        tarea.id = tareas.length ? tareas[tareas.length - 1].id + 1 : 1;
+        tarea.fechaCreacion = new Date().toISOString();
         tareas.push(tarea);
         res
         .header('Content-Type', 'application/json')
@@ -40,12 +46,19 @@ export class TareasController
         const { id } = req.params;
         const index = tareas.findIndex(tarea => tarea.id === parseInt(id));
         if (index === -1) {
-            res
+            return res
             .header('Content-Type', 'application/json')
             .status(404)
             .send({ message: `La tarea con id ${id} no existe` });
         }
-        tareas[index] = req.body;
+        const { success, error, data } = validatePartialTareaSchema(req.body);
+        if (!success) {
+            return res
+            .header('Content-Type', 'application/json')
+            .status(400)
+            .send({ message: error.errors });
+        }
+        tareas[index] = { ...tareas[index], ...data };
         res
         .header('Content-Type', 'application/json')
         .status(200)
@@ -56,7 +69,7 @@ export class TareasController
         const { id } = req.params;
         const index = tareas.findIndex(tarea => tarea.id === parseInt(id));
         if (index === -1) {
-            res
+            return res
             .header('Content-Type', 'application/json')
             .status(404)
             .send({ message: `La tarea con id ${id} no existe` });

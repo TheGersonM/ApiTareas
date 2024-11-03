@@ -20,7 +20,7 @@ const tareasSchema = z.object({
     .min(20, {message: "La descripción debe tener al menos 20 caracteres"})
     .max(200, {message: "La descripción debe tener como máximo 200 caracteres"}),
     "estado": z.boolean(),
-    "fechaCreacion": z.datetimeRegex(),
+    "fechaCreacion": z.string(),
 
 }).strict();
 

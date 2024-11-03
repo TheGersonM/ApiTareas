@@ -1,10 +1,19 @@
-GET http://localhost:4000/tareas
+GET http://localhost:3000/api/tareas
 
 ###
-POST http://localhost:4000/tareas
+POST http://localhost:3000/api/tareas
+
+###
+PUT http://localhost:3000/api/tareas/id:
+
+###
+DELETE http://localhost:3000/api/tareas/id:
 Content-Type: "application/json"
 
 {
-    "nombre": "Gerson",
-    "Completada": true   
+        "id": 1,
+        "titulo": "Tarea 1",
+        "descripcion": "Completar la tarea de diseño",
+        "completada": false,
+        "fechaCreacion": "2021-09-01T00:00:00.000Z"  
 }

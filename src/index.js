@@ -1,7 +1,6 @@
-import express from 'express';
+import express, { json } from 'express';
 import tareasRouter from './routers/tareas.js';
 import {corsMiddleware} from './middlewares/cors.js';
-import { app as _app } from './config';
 
 const app = express();
 
@@ -10,7 +9,7 @@ app.disable('x-powered-by');
 app.use(json());
 app.use(corsMiddleware());
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 //configuraciones
 app.set('port', PORT);
 
